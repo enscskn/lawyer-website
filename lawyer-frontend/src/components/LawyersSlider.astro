@@ -1,0 +1,300 @@
+---
+// Avukat verileri
+const lawyers = [
+  {
+    id: 1,
+    name: "Kasım Aksoy",
+    title: "Kurucu Ortak",
+    specialization: "Ticaret Hukuku, Ceza Hukuku",
+    bio: "15 yıllık deneyimi ile ticaret ve ceza hukuku alanlarında uzmanlaşmış, 500'den fazla başarılı dava ile müvekkillerinin güvenini kazanmıştır.",
+    image: "/logo.jpeg",
+    experience: "15 Yıl",
+    cases: "500+ Dava"
+  },
+  {
+    id: 2,
+    name: "Ahmet Yılmaz",
+    title: "Kıdemli Avukat",
+    specialization: "İş Hukuku, Aile Hukuku",
+    bio: "İş hukuku ve aile hukuku alanlarında 10 yıllık deneyime sahip, müvekkillerinin haklarını en iyi şekilde korumak için çalışmaktadır.",
+    image: "/logo.jpeg",
+    experience: "10 Yıl",
+    cases: "300+ Dava"
+  },
+  {
+    id: 3,
+    name: "Fatma Demir",
+    title: "Uzman Avukat",
+    specialization: "Gayrimenkul Hukuku, İcra Hukuku",
+    bio: "Gayrimenkul ve icra hukuku alanlarında uzmanlaşmış, karmaşık hukuki sorunları çözüme kavuşturmada başarılı sonuçlar elde etmiştir.",
+    image: "/logo.jpeg",
+    experience: "8 Yıl",
+    cases: "250+ Dava"
+  }
+];
+---
+
+<section id="lawyers" class="py-20 bg-dark-light/30">
+  <div class="container mx-auto px-4">
+    <div class="max-w-6xl mx-auto">
+      <!-- Section Header -->
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-5xl font-serif font-bold text-secondary mb-6">
+          Uzman <span class="text-primary">Avukatlarımız</span>
+        </h2>
+        <p class="text-lg text-secondary/80 max-w-3xl mx-auto">
+          Deneyimli ve uzman avukatlarımızla hukuki sorunlarınıza profesyonel çözümler üretiyoruz.
+        </p>
+      </div>
+
+      <!-- Slider Container -->
+      <div class="relative h-[600px] md:h-[500px] overflow-hidden rounded-2xl bg-dark-light/50 backdrop-blur-sm border border-primary/20">
+        <div id="slider-container" class="absolute inset-0 flex items-center justify-center p-8 transition-all duration-500">
+          {lawyers.map((lawyer, index) => (
+            <div 
+              id={`slide-${index}`}
+              class={`absolute inset-0 flex items-center justify-center p-8 transition-all duration-500 ${
+                index === 0 ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'
+              }`}
+              data-index={index}
+            >
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center max-w-4xl mx-auto">
+                <!-- Lawyer Image -->
+                <div class="relative">
+                  <div class="relative overflow-hidden rounded-2xl">
+                    <img
+                      src={lawyer.image}
+                      alt={lawyer.name}
+                      class="w-full h-80 object-cover"
+                    />
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/80 via-transparent to-transparent"></div>
+                  </div>
+                  
+                  <!-- Experience Badge -->
+                  <div class="absolute -bottom-4 -right-4 bg-gradient-to-r from-primary to-primary-light text-dark font-bold px-4 py-2 rounded-lg shadow-lg">
+                    {lawyer.experience}
+                  </div>
+                </div>
+
+                <!-- Lawyer Info -->
+                <div class="space-y-6">
+                  <div>
+                    <h3 class="text-3xl md:text-4xl font-serif font-bold text-secondary mb-2">
+                      {lawyer.name}
+                    </h3>
+                    <p class="text-xl text-primary font-semibold mb-4">
+                      {lawyer.title}
+                    </p>
+                    <p class="text-lg text-secondary/80 mb-4">
+                      {lawyer.specialization}
+                    </p>
+                  </div>
+
+                  <p class="text-secondary/70 leading-relaxed">
+                    {lawyer.bio}
+                  </p>
+
+                  <div class="flex items-center space-x-6">
+                    <div class="text-center">
+                      <div class="text-2xl font-bold text-primary">
+                        {lawyer.cases}
+                      </div>
+                      <p class="text-sm text-secondary/60">Tamamlanan Dava</p>
+                    </div>
+                    <div class="text-center">
+                      <div class="text-2xl font-bold text-primary">
+                        {lawyer.experience}
+                      </div>
+                      <p class="text-sm text-secondary/60">Deneyim</p>
+                    </div>
+                  </div>
+
+                  <div class="flex space-x-4">
+                    <button class="bg-gradient-to-r from-primary to-primary-light hover:from-primary-light hover:to-primary text-dark font-bold px-6 py-3 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 transform hover:scale-105">
+                      Profili Görüntüle
+                    </button>
+                    <button class="border-2 border-primary text-primary hover:bg-primary hover:text-dark font-semibold px-6 py-3 rounded-lg transition-all duration-300">
+                      İletişime Geç
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <!-- Navigation Arrows -->
+        <button
+          id="prev-btn"
+          class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-dark/80 hover:bg-dark text-primary hover:text-primary-light p-3 rounded-full transition-all duration-300 z-10"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+        <button
+          id="next-btn"
+          class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-dark/80 hover:bg-dark text-primary hover:text-primary-light p-3 rounded-full transition-all duration-300 z-10"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </button>
+
+        <!-- Dots Indicator -->
+        <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
+          {lawyers.map((_, index) => (
+            <button
+              class={`dot-btn w-3 h-3 rounded-full transition-all duration-300 ${
+                index === 0 ? 'bg-primary scale-125' : 'bg-secondary/40 hover:bg-secondary/60'
+              }`}
+              data-index={index}
+            ></button>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Slider fonksiyonalitesi
+  let currentIndex = 0;
+  const totalSlides = 3;
+  let autoPlayTimer: NodeJS.Timeout;
+
+  // DOM elementlerini seç
+  const slides = document.querySelectorAll('[id^="slide-"]');
+  const dots = document.querySelectorAll('.dot-btn');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+
+  // Slide'ları güncelle
+  function updateSlides() {
+    slides.forEach((slide, index) => {
+      if (index === currentIndex) {
+        slide.classList.remove('opacity-0', 'translate-x-full', '-translate-x-full');
+        slide.classList.add('opacity-100', 'translate-x-0');
+      } else if (index < currentIndex) {
+        slide.classList.remove('opacity-100', 'translate-x-0', 'translate-x-full');
+        slide.classList.add('opacity-0', '-translate-x-full');
+      } else {
+        slide.classList.remove('opacity-100', 'translate-x-0', '-translate-x-full');
+        slide.classList.add('opacity-0', 'translate-x-full');
+      }
+    });
+
+    // Dots'ları güncelle
+    dots.forEach((dot, index) => {
+      if (index === currentIndex) {
+        dot.classList.add('bg-primary', 'scale-125');
+        dot.classList.remove('bg-secondary/40');
+      } else {
+        dot.classList.remove('bg-primary', 'scale-125');
+        dot.classList.add('bg-secondary/40');
+      }
+    });
+  }
+
+  // Sonraki slide'a geç
+  function nextSlide() {
+    currentIndex = (currentIndex + 1) % totalSlides;
+    updateSlides();
+  }
+
+  // Önceki slide'a geç
+  function prevSlide() {
+    currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+    updateSlides();
+  }
+
+  // Belirli bir slide'a geç
+  function goToSlide(index: number) {
+    currentIndex = index;
+    updateSlides();
+  }
+
+  // Otomatik oynatma
+  function startAutoPlay() {
+    autoPlayTimer = setInterval(nextSlide, 5000);
+  }
+
+  function stopAutoPlay() {
+    clearInterval(autoPlayTimer);
+  }
+
+  // Event listener'ları ekle
+  document.addEventListener('DOMContentLoaded', () => {
+    // Navigation butonları
+    prevBtn?.addEventListener('click', () => {
+      stopAutoPlay();
+      prevSlide();
+      startAutoPlay();
+    });
+
+    nextBtn?.addEventListener('click', () => {
+      stopAutoPlay();
+      nextSlide();
+      startAutoPlay();
+    });
+
+    // Dot butonları
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        stopAutoPlay();
+        goToSlide(index);
+        startAutoPlay();
+      });
+    });
+
+    // Mouse hover'da otomatik oynatmayı durdur
+    const sliderContainer = document.getElementById('slider-container');
+    sliderContainer?.addEventListener('mouseenter', stopAutoPlay);
+    sliderContainer?.addEventListener('mouseleave', startAutoPlay);
+
+    // Touch/swipe desteği
+    let startX = 0;
+    let endX = 0;
+
+    sliderContainer?.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+    });
+
+    sliderContainer?.addEventListener('touchend', (e) => {
+      endX = e.changedTouches[0].clientX;
+      const diff = startX - endX;
+      
+      if (Math.abs(diff) > 50) { // Minimum swipe mesafesi
+        if (diff > 0) {
+          // Sola swipe - sonraki slide
+          stopAutoPlay();
+          nextSlide();
+          startAutoPlay();
+        } else {
+          // Sağa swipe - önceki slide
+          stopAutoPlay();
+          prevSlide();
+          startAutoPlay();
+        }
+      }
+    });
+
+    // Otomatik oynatmayı başlat
+    startAutoPlay();
+  });
+</script>
+
+<style>
+  /* Smooth transitions için ek stiller */
+  [id^="slide-"] {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dot-btn {
+    cursor: pointer;
+  }
+
+  .dot-btn:hover {
+    transform: scale(1.2);
+  }
+</style> 
