@@ -11,13 +11,18 @@ const tag = url.searchParams.get('tag');
 
 // Filtreleme
 let filteredPosts = blogPosts;
+let activeCategory = '';
+let activeTag = '';
+
 if (category) {
   const decodedCategory = decodeURIComponent(category);
   filteredPosts = blogPosts.filter(post => post.category === decodedCategory);
+  activeCategory = decodedCategory;
 }
 if (tag) {
   const decodedTag = decodeURIComponent(tag);
   filteredPosts = blogPosts.filter(post => post.tags.includes(decodedTag));
+  activeTag = decodedTag;
 }
 
 // Kategorileri al
@@ -45,7 +50,7 @@ const tags = [...new Set(blogPosts.flatMap(post => post.tags))];
             <a 
               href="/blog" 
               class={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
-                !category && !tag 
+                !activeCategory && !activeTag 
                   ? 'bg-primary text-dark' 
                   : 'bg-dark-light/50 text-secondary hover:bg-primary hover:text-dark'
               }`}
@@ -56,7 +61,7 @@ const tags = [...new Set(blogPosts.flatMap(post => post.tags))];
               <a 
                 href={`/blog?category=${encodeURIComponent(cat)}`}
                 class={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
-                  category === cat 
+                  activeCategory === cat 
                     ? 'bg-primary text-dark' 
                     : 'bg-dark-light/50 text-secondary hover:bg-primary hover:text-dark'
                 }`}
