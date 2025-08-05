@@ -1,0 +1,217 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getBlogPostById, blogPosts } from '../../data/blogPosts';
+
+export async function getStaticPaths() {
+  return blogPosts.map((post) => ({
+    params: { id: post.id.toString() },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+
+if (!post) {
+  return Astro.redirect('/blog');
+}
+---
+
+<Layout title={`${post.title} - Kasım Aksoy Hukuk & Danışmanlık`}>
+  <Header />
+  
+  <main class="pt-20">
+    <!-- Blog Post Header -->
+    <section class="bg-gradient-to-br from-dark via-dark-light to-dark-dark py-20">
+      <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+          <!-- Breadcrumb -->
+          <nav class="mb-8">
+            <ol class="flex items-center space-x-2 text-sm text-secondary/70">
+              <li><a href="/" class="hover:text-primary transition-colors">Ana Sayfa</a></li>
+              <li><span class="text-primary">/</span></li>
+              <li><a href="/blog" class="hover:text-primary transition-colors">Blog</a></li>
+              <li><span class="text-primary">/</span></li>
+              <li class="text-secondary">{post.title}</li>
+            </ol>
+          </nav>
+          
+          <!-- Post Meta -->
+          <div class="flex items-center space-x-4 text-sm text-secondary/60 mb-6">
+            <span>{post.date}</span>
+            <span>•</span>
+            <span>{post.readTime} okuma</span>
+            <span>•</span>
+            <span class="bg-primary text-dark px-3 py-1 rounded-full text-xs font-semibold">
+              {post.category}
+            </span>
+          </div>
+          
+          <!-- Post Title -->
+          <h1 class="text-3xl md:text-5xl font-serif font-bold text-secondary mb-6">
+            {post.title}
+          </h1>
+          
+          <!-- Post Excerpt -->
+          <p class="text-xl text-secondary/80 mb-8">
+            {post.excerpt}
+          </p>
+          
+          <!-- Author -->
+          <div class="flex items-center space-x-4">
+            <img src="/logo.jpeg" alt={post.author} class="w-12 h-12 rounded-full object-cover border-2 border-primary">
+            <div>
+              <p class="text-secondary font-semibold">{post.author}</p>
+              <p class="text-secondary/60 text-sm">Avukat</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Blog Post Content -->
+    <section class="py-20 bg-dark-light/30">
+      <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+          <div class="grid grid-cols-1 lg:grid-cols-4 gap-12">
+            <!-- Main Content -->
+            <div class="lg:col-span-3">
+              <article class="bg-dark-light/50 backdrop-blur-sm border border-primary/20 rounded-xl p-8">
+                <!-- Featured Image -->
+                <div class="relative overflow-hidden rounded-lg mb-8">
+                  <img 
+                    src={post.image} 
+                    alt={post.title}
+                    class="w-full h-64 md:h-96 object-cover"
+                  />
+                </div>
+                
+                <!-- Post Content -->
+                <div class="prose prose-invert max-w-none">
+                  <div set:html={post.content}></div>
+                </div>
+                
+                <!-- Tags -->
+                <div class="border-t border-primary/20 pt-8 mt-8">
+                  <h4 class="text-lg font-semibold text-secondary mb-4">Etiketler:</h4>
+                  <div class="flex flex-wrap gap-2">
+                    {post.tags.map(tag => (
+                      <a 
+                        href={`/blog?tag=${encodeURIComponent(tag)}`}
+                        class="text-sm bg-primary/20 text-primary px-3 py-1 rounded-full hover:bg-primary hover:text-dark transition-all duration-300"
+                      >
+                        {tag}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </article>
+            </div>
+            
+            <!-- Sidebar -->
+            <div class="lg:col-span-1">
+              <!-- Related Posts -->
+              <div class="bg-dark-light/50 backdrop-blur-sm border border-primary/20 rounded-xl p-6 mb-8">
+                <h3 class="text-xl font-serif font-semibold text-secondary mb-6">İlgili Yazılar</h3>
+                <div class="space-y-4">
+                  {blogPosts
+                    .filter(p => p.id !== post.id && p.category === post.category)
+                    .slice(0, 3)
+                    .map(relatedPost => (
+                      <a 
+                        href={`/blog/${relatedPost.id}`}
+                        class="block group"
+                      >
+                        <div class="flex items-start space-x-3">
+                          <img 
+                            src={relatedPost.image} 
+                            alt={relatedPost.title}
+                            class="w-16 h-16 object-cover rounded-lg flex-shrink-0"
+                          />
+                          <div>
+                            <h4 class="text-sm font-semibold text-secondary group-hover:text-primary transition-colors line-clamp-2">
+                              {relatedPost.title}
+                            </h4>
+                            <p class="text-xs text-secondary/60 mt-1">
+                              {relatedPost.date}
+                            </p>
+                          </div>
+                        </div>
+                      </a>
+                    ))}
+                </div>
+              </div>
+              
+              <!-- Categories -->
+              <div class="bg-dark-light/50 backdrop-blur-sm border border-primary/20 rounded-xl p-6">
+                <h3 class="text-xl font-serif font-semibold text-secondary mb-6">Kategoriler</h3>
+                <div class="space-y-2">
+                  {[...new Set(blogPosts.map(p => p.category))].map(category => (
+                    <a 
+                      href={`/blog?category=${encodeURIComponent(category)}`}
+                      class="block text-secondary/70 hover:text-primary transition-colors py-2"
+                    >
+                      {category}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</Layout>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  /* Prose styles for blog content */
+  .prose {
+    color: #e5e7eb;
+  }
+  
+  .prose h2 {
+    color: #fbbf24;
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .prose h3 {
+    color: #fbbf24;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .prose p {
+    margin-bottom: 1rem;
+    line-height: 1.75;
+  }
+  
+  .prose ul {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+  }
+  
+  .prose li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .prose strong {
+    color: #fbbf24;
+    font-weight: 600;
+  }
+</style> 
