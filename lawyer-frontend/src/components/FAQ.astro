@@ -57,7 +57,7 @@ const faqs = [
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
               </svg>
             </button>
-            <div class="faq-answer hidden px-6 pb-4">
+            <div class="faq-answer px-6 pb-4 max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out">
               <p class="text-secondary/70 leading-relaxed">
                 {faq.answer}
               </p>
@@ -96,7 +96,7 @@ const faqs = [
 </section>
 
 <script>
-  // FAQ Accordion functionality
+  // FAQ Accordion functionality with smooth animations
   document.addEventListener('DOMContentLoaded', () => {
     const faqItems = document.querySelectorAll('.faq-item');
     
@@ -106,7 +106,7 @@ const faqs = [
       const icon = item.querySelector('.faq-icon');
       
       question?.addEventListener('click', () => {
-        const isOpen = answer?.classList.contains('hidden');
+        const isOpen = answer?.classList.contains('faq-open');
         
         // Close all other FAQ items
         faqItems.forEach(otherItem => {
@@ -114,18 +114,18 @@ const faqs = [
           const otherIcon = otherItem.querySelector('.faq-icon');
           
           if (otherItem !== item) {
-            otherAnswer?.classList.add('hidden');
+            otherAnswer?.classList.remove('faq-open');
             otherIcon?.classList.remove('rotate-180');
           }
         });
         
         // Toggle current item
         if (isOpen) {
-          answer?.classList.remove('hidden');
-          icon?.classList.add('rotate-180');
-        } else {
-          answer?.classList.add('hidden');
+          answer?.classList.remove('faq-open');
           icon?.classList.remove('rotate-180');
+        } else {
+          answer?.classList.add('faq-open');
+          icon?.classList.add('rotate-180');
         }
       });
     });
@@ -146,6 +146,22 @@ const faqs = [
   }
   
   .faq-answer {
-    transition: all 0.3s ease;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+  }
+  
+  .faq-answer.faq-open {
+    max-height: 200px;
+    opacity: 1;
+  }
+  
+  .faq-icon {
+    transition: transform 0.3s ease;
+  }
+  
+  .faq-icon.rotate-180 {
+    transform: rotate(180deg);
   }
 </style> 

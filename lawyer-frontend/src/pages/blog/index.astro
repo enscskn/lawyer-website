@@ -46,25 +46,19 @@ const tags = [...new Set(blogPosts.flatMap(post => post.tags))];
           </p>
           
           <!-- Filter Buttons -->
-          <div class="flex flex-wrap justify-center gap-4 mb-8">
+          <div class="flex flex-wrap justify-center gap-4 mb-8" id="filter-buttons">
             <a 
               href="/blog" 
-              class={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
-                !activeCategory && !activeTag 
-                  ? 'bg-primary text-dark' 
-                  : 'bg-dark-light/50 text-secondary hover:bg-primary hover:text-dark'
-              }`}
+              class="filter-btn px-4 py-2 rounded-lg font-medium transition-all duration-300"
+              data-category=""
             >
               Tümü
             </a>
             {categories.map(cat => (
               <a 
                 href={`/blog?category=${encodeURIComponent(cat)}`}
-                class={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
-                  activeCategory === cat 
-                    ? 'bg-primary text-dark' 
-                    : 'bg-dark-light/50 text-secondary hover:bg-primary hover:text-dark'
-                }`}
+                class="filter-btn px-4 py-2 rounded-lg font-medium transition-all duration-300"
+                data-category={cat}
               >
                 {cat}
               </a>
@@ -78,78 +72,80 @@ const tags = [...new Set(blogPosts.flatMap(post => post.tags))];
     <section class="py-20 bg-dark-light/30">
       <div class="container mx-auto px-4">
         <div class="max-w-6xl mx-auto">
-          {filteredPosts.length > 0 ? (
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredPosts.map((post) => (
-                <article class="bg-dark-light/50 backdrop-blur-sm border border-primary/20 rounded-xl overflow-hidden hover:border-primary/40 hover:bg-dark-light/70 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-primary/10">
-                  <!-- Blog Image -->
-                  <div class="relative overflow-hidden h-48">
-                    <img 
-                      src={post.image} 
-                      alt={post.title}
-                      class="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
-                    />
-                    <div class="absolute inset-0 bg-gradient-to-t from-dark/60 via-transparent to-transparent"></div>
-                    <div class="absolute top-4 left-4">
-                      <span class="bg-primary text-dark text-xs font-semibold px-3 py-1 rounded-full">
-                        {post.category}
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <!-- Blog Content -->
-                  <div class="p-6">
-                    <div class="flex items-center justify-between text-sm text-secondary/60 mb-3">
-                      <span>{post.date}</span>
-                      <span>{post.readTime} okuma</span>
-                    </div>
-                    
-                    <h3 class="text-xl font-serif font-semibold text-secondary mb-3 line-clamp-2">
-                      {post.title}
-                    </h3>
-                    
-                    <p class="text-secondary/70 mb-4 line-clamp-3">
-                      {post.excerpt}
-                    </p>
-                    
-                    <!-- Tags -->
-                    <div class="flex flex-wrap gap-2 mb-4">
-                      {post.tags.slice(0, 3).map(tag => (
-                        <span class="text-xs bg-primary/20 text-primary px-2 py-1 rounded">
-                          {tag}
+          <div id="blog-posts-container">
+            {filteredPosts.length > 0 ? (
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {filteredPosts.map((post) => (
+                  <article class="blog-post bg-dark-light/50 backdrop-blur-sm border border-primary/20 rounded-xl overflow-hidden hover:border-primary/40 hover:bg-dark-light/70 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-primary/10" data-category={post.category} data-tags={post.tags.join(',')}>
+                    <!-- Blog Image -->
+                    <div class="relative overflow-hidden h-48">
+                      <img 
+                        src={post.image} 
+                        alt={post.title}
+                        class="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+                      />
+                      <div class="absolute inset-0 bg-gradient-to-t from-dark/60 via-transparent to-transparent"></div>
+                      <div class="absolute top-4 left-4">
+                        <span class="bg-primary text-dark text-xs font-semibold px-3 py-1 rounded-full">
+                          {post.category}
                         </span>
-                      ))}
+                      </div>
                     </div>
                     
-                    <a 
-                      href={`/blog/${post.id}`}
-                      class="inline-flex items-center text-primary hover:text-primary-light font-semibold transition-colors duration-300"
-                    >
-                      Devamını Oku
-                      <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                      </svg>
-                    </a>
-                  </div>
-                </article>
-              ))}
-            </div>
-          ) : (
-            <div class="text-center py-20">
-              <h3 class="text-2xl font-serif font-semibold text-secondary mb-4">
-                Blog yazısı bulunamadı
-              </h3>
-              <p class="text-secondary/70 mb-8">
-                Seçtiğiniz kriterlere uygun blog yazısı bulunmamaktadır.
-              </p>
-              <a 
-                href="/blog" 
-                class="inline-flex items-center bg-gradient-to-r from-primary to-primary-light hover:from-primary-light hover:to-primary text-dark font-bold px-8 py-3 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 transform hover:scale-105"
-              >
-                Tüm Blog Yazılarını Gör
-              </a>
-            </div>
-          )}
+                    <!-- Blog Content -->
+                    <div class="p-6">
+                      <div class="flex items-center justify-between text-sm text-secondary/60 mb-3">
+                        <span>{post.date}</span>
+                        <span>{post.readTime} okuma</span>
+                      </div>
+                      
+                      <h3 class="text-xl font-serif font-semibold text-secondary mb-3 line-clamp-2">
+                        {post.title}
+                      </h3>
+                      
+                      <p class="text-secondary/70 mb-4 line-clamp-3">
+                        {post.excerpt}
+                      </p>
+                      
+                      <!-- Tags -->
+                      <div class="flex flex-wrap gap-2 mb-4">
+                        {post.tags.slice(0, 3).map(tag => (
+                          <span class="text-xs bg-primary/20 text-primary px-2 py-1 rounded">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                      
+                      <a 
+                        href={`/blog/${post.id}`}
+                        class="inline-flex items-center text-primary hover:text-primary-light font-semibold transition-colors duration-300"
+                      >
+                        Devamını Oku
+                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                      </a>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <div class="text-center py-20">
+                <h3 class="text-2xl font-serif font-semibold text-secondary mb-4">
+                  Blog yazısı bulunamadı
+                </h3>
+                <p class="text-secondary/70 mb-8">
+                  Seçtiğiniz kriterlere uygun blog yazısı bulunmamaktadır.
+                </p>
+                <a 
+                  href="/blog" 
+                  class="inline-flex items-center bg-gradient-to-r from-primary to-primary-light hover:from-primary-light hover:to-primary text-dark font-bold px-8 py-3 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 transform hover:scale-105"
+                >
+                  Tüm Blog Yazılarını Gör
+                </a>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </section>
@@ -172,4 +168,234 @@ const tags = [...new Set(blogPosts.flatMap(post => post.tags))];
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-</style> 
+  
+  .filter-btn.active {
+    background-color: #fbbf24;
+    color: #1f2937;
+  }
+  
+  .filter-btn:not(.active) {
+    background-color: rgba(31, 41, 55, 0.5);
+    color: #e5e7eb;
+  }
+  
+  .filter-btn:not(.active):hover {
+    background-color: #fbbf24;
+    color: #1f2937;
+  }
+  
+  .blog-post.hidden {
+    display: none;
+  }
+</style>
+
+<script>
+  // Blog verilerini global olarak tanımla
+  const blogPosts = [
+    {
+      id: 1,
+      title: "Ticaret Hukukunda Yeni Düzenlemeler",
+      excerpt: "2024 yılında ticaret hukukunda yapılan değişiklikler ve işletmelere etkileri hakkında detaylı analiz.",
+      image: "/logo.jpeg",
+      date: "15 Mart 2024",
+      category: "Ticaret Hukuku",
+      readTime: "5 dk",
+      tags: ["Ticaret Hukuku", "Şirket Kuruluşu", "Ticari Sözleşmeler", "Marka Koruması"]
+    },
+    {
+      id: 2,
+      title: "İş Hukukunda İşçi Hakları",
+      excerpt: "İşçilerin temel hakları ve işverenlerin yükümlülükleri konusunda kapsamlı rehber.",
+      image: "/logo.jpeg",
+      date: "10 Mart 2024",
+      category: "İş Hukuku",
+      readTime: "7 dk",
+      tags: ["İş Hukuku", "İşçi Hakları", "İş Sözleşmesi", "İş Güvenliği"]
+    },
+    {
+      id: 3,
+      title: "Gayrimenkul Hukukunda Tapu İşlemleri",
+      excerpt: "Tapu işlemlerinde dikkat edilmesi gereken önemli noktalar ve yasal süreçler.",
+      image: "/logo.jpeg",
+      date: "5 Mart 2024",
+      category: "Gayrimenkul Hukuku",
+      readTime: "6 dk",
+      tags: ["Gayrimenkul Hukuku", "Tapu İşlemleri", "Kat Karşılığı", "İpotek"]
+    },
+    {
+      id: 4,
+      title: "Şirket Kuruluşu ve Yasal Süreçler",
+      excerpt: "Şirket kuruluşu süreçlerinde dikkat edilmesi gereken yasal adımlar ve belgeler.",
+      image: "/logo.jpeg",
+      date: "1 Mart 2024",
+      category: "Ticaret Hukuku",
+      readTime: "4 dk",
+      tags: ["Ticaret Hukuku", "Şirket Kuruluşu", "Limited Şirket", "Yasal Süreçler"]
+    },
+    {
+      id: 5,
+      title: "İş Sözleşmesi Türleri ve Özellikleri",
+      excerpt: "Farklı iş sözleşmesi türleri ve bunların özellikleri hakkında detaylı bilgi.",
+      image: "/logo.jpeg",
+      date: "28 Şubat 2024",
+      category: "İş Hukuku",
+      readTime: "3 dk",
+      tags: ["İş Hukuku", "İş Sözleşmesi", "Belirsiz Süreli", "Kısmi Süreli"]
+    },
+    {
+      id: 6,
+      title: "Kat Karşılığı İnşaat Sözleşmeleri",
+      excerpt: "Kat karşılığı inşaat sözleşmelerinde dikkat edilmesi gereken yasal noktalar.",
+      image: "/logo.jpeg",
+      date: "25 Şubat 2024",
+      category: "Gayrimenkul Hukuku",
+      readTime: "5 dk",
+      tags: ["Gayrimenkul Hukuku", "Kat Karşılığı", "İnşaat Sözleşmesi", "Müteahhit"]
+    },
+    {
+      id: 7,
+      title: "Marka ve Patent Koruması",
+      excerpt: "Fikri mülkiyet haklarının korunması ve marka patent başvuru süreçleri.",
+      image: "/logo.jpeg",
+      date: "20 Şubat 2024",
+      category: "Ticaret Hukuku",
+      readTime: "4 dk",
+      tags: ["Ticaret Hukuku", "Marka Koruması", "Patent", "Fikri Mülkiyet"]
+    },
+    {
+      id: 8,
+      title: "İş Güvenliği ve İşçi Sağlığı",
+      excerpt: "İş güvenliği önlemleri ve işçi sağlığının korunması konusunda yasal düzenlemeler.",
+      image: "/logo.jpeg",
+      date: "18 Şubat 2024",
+      category: "İş Hukuku",
+      readTime: "6 dk",
+      tags: ["İş Hukuku", "İş Güvenliği", "İşçi Sağlığı", "Risk Değerlendirmesi"]
+    },
+    {
+      id: 9,
+      title: "Gayrimenkul Alım-Satım Sözleşmeleri",
+      excerpt: "Gayrimenkul alım-satım sözleşmelerinde dikkat edilmesi gereken yasal noktalar.",
+      image: "/logo.jpeg",
+      date: "15 Şubat 2024",
+      category: "Gayrimenkul Hukuku",
+      readTime: "5 dk",
+      tags: ["Gayrimenkul Hukuku", "Alım-Satım", "Tapu İşlemleri", "Sözleşme"]
+    },
+    {
+      id: 10,
+      title: "Ticari Sözleşmelerde Haksız Şartlar",
+      excerpt: "Ticari sözleşmelerde haksız şartların belirlenmesi ve yasal koruma yolları.",
+      image: "/logo.jpeg",
+      date: "12 Şubat 2024",
+      category: "Ticaret Hukuku",
+      readTime: "4 dk",
+      tags: ["Ticaret Hukuku", "Ticari Sözleşmeler", "Haksız Şartlar", "Yasal Koruma"]
+    }
+  ];
+
+  // Sayfa yüklendiğinde aktif filtreyi belirle ve filtreleme yap
+  document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const category = urlParams.get('category');
+    const tag = urlParams.get('tag');
+    
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const blogPostsContainer = document.getElementById('blog-posts-container');
+    
+    // Aktif butonları belirle
+    filterButtons.forEach(button => {
+      const buttonCategory = button.getAttribute('data-category');
+      
+      if (category && buttonCategory === category) {
+        button.classList.add('active');
+      }
+      else if (!category && !tag && buttonCategory === '') {
+        button.classList.add('active');
+      }
+      else {
+        button.classList.remove('active');
+      }
+    });
+    
+    // Eğer URL'de kategori parametresi varsa, client-side filtreleme yap
+    if (category) {
+      filterPostsByCategory(category);
+    }
+  });
+  
+  // Kategoriye göre filtreleme fonksiyonu
+  function filterPostsByCategory(category: string) {
+    const blogPosts = document.querySelectorAll('.blog-post');
+    const container = document.getElementById('blog-posts-container');
+    
+    if (!container) return;
+    
+    let visibleCount = 0;
+    
+    blogPosts.forEach(post => {
+      const postCategory = post.getAttribute('data-category');
+      
+      if (postCategory === category) {
+        post.classList.remove('hidden');
+        visibleCount++;
+      } else {
+        post.classList.add('hidden');
+      }
+    });
+    
+    // Eğer hiç blog yazısı görünmüyorsa, "bulunamadı" mesajını göster
+    if (visibleCount === 0) {
+      container.innerHTML = `
+        <div class="text-center py-20">
+          <h3 class="text-2xl font-serif font-semibold text-secondary mb-4">
+            Blog yazısı bulunamadı
+          </h3>
+          <p class="text-secondary/70 mb-8">
+            Seçtiğiniz kriterlere uygun blog yazısı bulunmamaktadır.
+          </p>
+          <a 
+            href="/blog" 
+            class="inline-flex items-center bg-gradient-to-r from-primary to-primary-light hover:from-primary-light hover:to-primary text-dark font-bold px-8 py-3 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 transform hover:scale-105"
+          >
+            Tüm Blog Yazılarını Gör
+          </a>
+        </div>
+      `;
+    }
+  }
+  
+  // Filtreleme butonlarına tıklama olayları ekle
+  document.addEventListener('click', function(e) {
+    const target = e.target as HTMLElement;
+    if (!target || !target.classList.contains('filter-btn')) return;
+    
+    e.preventDefault();
+    
+    const category = target.getAttribute('data-category');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    
+    // Tüm butonları pasif yap
+    filterButtons.forEach(btn => btn.classList.remove('active'));
+    
+    // Tıklanan butonu aktif yap
+    target.classList.add('active');
+    
+    // URL'yi güncelle
+    if (category) {
+      window.history.pushState({}, '', `/blog?category=${encodeURIComponent(category)}`);
+      filterPostsByCategory(category);
+    } else {
+      window.history.pushState({}, '', '/blog');
+      // Tüm blog yazılarını göster
+      const blogPosts = document.querySelectorAll('.blog-post');
+      blogPosts.forEach(post => post.classList.remove('hidden'));
+      
+      // Container'ı orijinal haline getir
+      const container = document.getElementById('blog-posts-container');
+      if (container && container.children.length === 1 && container.children[0].classList.contains('text-center')) {
+        location.reload();
+      }
+    }
+  });
+</script> 
